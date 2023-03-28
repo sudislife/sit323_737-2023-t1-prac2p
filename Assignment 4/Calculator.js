@@ -164,6 +164,6 @@ app.get('/pow', (req, res) => {
     res.send('The power of ' + n1 + ' to ' + n2 + ' is ' + Math.pow(n1, n2));
 })
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.listen(6000, () => {
+    console.log('Server is running on port 6000');
 });
