@@ -1,31 +1,58 @@
 const express = require('express');
 const { urlencoded } = require('body-parser');
-const app = express();
 const res = require('express/lib/response');
 const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
+const path = require('path');
+// const connection = require('./config/database');
+// const MongoStore = require('connect-mongo')(session);
 
 const PORT = 3000;
+const app = express();
+const router = express.Router();
 
-app.use(passport.initialize());
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Go to http://localhost:3000/ to test
-app.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
     res.sendFile('index.html', {root: __dirname});
 });
 
 // Go to http://localhost:3000/register to test
-app.get('/register', (req, res) => {
+router.get('/register', (req, res, next) => {
     res.sendFile('register.html', {root: __dirname});
 });
 
 // Go to http://localhost:3000/login to test
-app.get('/login', (req, res) => {
+router.get('/login', (req, res, next) => {
     res.sendFile('login.html', {root: __dirname});
 });
+
+// Register a new user
+app.post('/register', (req, res) => {
+    User.register(new User({username: req.body.username}), req.body.password, (err, user) => {
+        if (err) {
+            console.log(err);
+
+            return res.render('register');
+        }
+
+        passport.authenticate('local')(req, res, () => {
+            res.redirect('/secret');
+        });
+    });
+});
+
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/secret',
+    failureRedirect: '/login'
+}), (req, res) => {
+});
+
 
 // Use `curl "http://localhost:3000/add?n1=10&n2=20"` to test
 app.get('/add', (req, res) => {
@@ -153,5 +180,5 @@ app.get('/pow', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log('Server is running on port ' + PORT);
 });
