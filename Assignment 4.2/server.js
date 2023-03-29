@@ -1,21 +1,25 @@
 const express = require('express');
-const { urlencoded } = require('body-parser');
 const res = require('express/lib/response');
 const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-// const connection = require('./config/database');
-// const MongoStore = require('connect-mongo')(session);
+const router = require('express').Router();
+const utils = require('./lib/utils');
+const mongoose = require('mongoose');
+require('./model/user');
+const connection = require('./config/database');
+const User = mongoose.model('User', connection.userSchema);
+require('./config/passport');
 
 const PORT = 3000;
 const app = express();
-const router = express.Router();
 
+app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(router);
 
 // Go to http://localhost:3000/ to test
 router.get('/', (req, res, next) => {
@@ -23,36 +27,77 @@ router.get('/', (req, res, next) => {
 });
 
 // Go to http://localhost:3000/register to test
-router.get('/register', (req, res, next) => {
+router.get('/register', (req, res) => {
     res.sendFile('register.html', {root: __dirname});
 });
 
 // Go to http://localhost:3000/login to test
-router.get('/login', (req, res, next) => {
+router.get('/login', (req, res) => {
     res.sendFile('login.html', {root: __dirname});
 });
 
-// Register a new user
-app.post('/register', (req, res) => {
-    User.register(new User({username: req.body.username}), req.body.password, (err, user) => {
-        if (err) {
-            console.log(err);
+router.get('/protected', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+    res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!"});
+});
 
-            return res.render('register');
-        }
+// Validate an existing user and issue a JWT
+router.post('/login', function(req, res, next){
+    console.log('User attempted to log in: ' + req.body.username)
+    User.findOne({ username: req.body.username })
+        .then((user) => {
 
-        passport.authenticate('local')(req, res, () => {
-            res.redirect('/secret');
+            if (!user) {
+                return res.status(401).json({ success: false, msg: "could not find user" });
+            }
+            
+            // Function defined at bottom of app.js
+            const isValid = utils.validPassword(req.body.password, user.hash, user.salt);
+            
+            if (isValid) {
+
+                const tokenObject = utils.issueJWT(user);
+
+                res.status(200).json({ success: true, token: tokenObject.token, expiresIn: tokenObject.expires });
+
+            } else {
+
+                res.status(401).json({ success: false, msg: "you entered the wrong password" });
+
+            }
+
+        })
+        .catch((err) => {
+            next(err);
         });
+});
+
+// Register a new user
+router.post('/register', function(req, res, next){
+    const saltHash = utils.genPassword(req.body.password);
+    
+    const salt = saltHash.salt;
+    const hash = saltHash.hash;
+
+    const newUser = new User({
+        username: req.body.username,
+        hash: hash,
+        salt: salt
     });
-});
 
-app.post('/login', passport.authenticate('local', {
-    successRedirect: '/secret',
-    failureRedirect: '/login'
-}), (req, res) => {
-});
+    try {
+    
+        newUser.save()
+            .then((user) => {
+                res.sendFile('success.html', {root: __dirname});
+            });
 
+    } catch (err) {
+        
+        res.json({ success: false, msg: err });
+    
+    }
+
+});
 
 // Use `curl "http://localhost:3000/add?n1=10&n2=20"` to test
 app.get('/add', (req, res) => {
