@@ -22,13 +22,7 @@ router.post('/login', function(req, res, next){
             
             if (isValid) {
 
-                const tokenObject = utils.issueJWT(user);
-
-                // Write token in a file
-                fs.writeFile('routes/token.txt', tokenObject.token, function (err) {
-                    if (err) throw err;
-                    console.log('Saved!');
-                });     
+                const tokenObject = utils.issueJWT(user);   
 
                 // res.sendFile('success.html', {root: __dirname});
 
