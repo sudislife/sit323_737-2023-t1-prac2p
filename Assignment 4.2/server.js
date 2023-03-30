@@ -1,106 +1,30 @@
 const express = require('express');
-const res = require('express/lib/response');
-const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
-const jwt = require('jsonwebtoken');
+const cors = require('cors');
 const path = require('path');
-const router = require('express').Router();
-const utils = require('./lib/utils');
-const mongoose = require('mongoose');
-require('./model/user');
-const connection = require('./config/database');
-const User = mongoose.model('User', connection.userSchema);
-require('./config/passport');
+const passport = require('passport');
+require('dotenv').config();
 
 const PORT = 3000;
 const app = express();
 
+require('./config/database');
+require('./model/user');
+require('./config/passport')(passport);
+
 app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(router);
+router = express.Router();
+app.use(require('./routes/users'));
 
-// Go to http://localhost:3000/ to test
-router.get('/', (req, res, next) => {
-    res.sendFile('index.html', {root: __dirname});
-});
+// Logout a user
+router.get('/logout', (req, res) => {
 
-// Go to http://localhost:3000/register to test
-router.get('/register', (req, res) => {
-    res.sendFile('register.html', {root: __dirname});
-});
-
-// Go to http://localhost:3000/login to test
-router.get('/login', (req, res) => {
-    res.sendFile('login.html', {root: __dirname});
-});
-
-router.get('/protected', passport.authenticate('jwt', { session: false }), (req, res, next) => {
-    res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!"});
-});
-
-// Validate an existing user and issue a JWT
-router.post('/login', function(req, res, next){
-    console.log('User attempted to log in: ' + req.body.username)
-    User.findOne({ username: req.body.username })
-        .then((user) => {
-
-            if (!user) {
-                return res.status(401).json({ success: false, msg: "could not find user" });
-            }
-            
-            // Function defined at bottom of app.js
-            const isValid = utils.validPassword(req.body.password, user.hash, user.salt);
-            
-            if (isValid) {
-
-                const tokenObject = utils.issueJWT(user);
-
-                res.status(200).json({ success: true, token: tokenObject.token, expiresIn: tokenObject.expires });
-
-            } else {
-
-                res.status(401).json({ success: false, msg: "you entered the wrong password" });
-
-            }
-
-        })
-        .catch((err) => {
-            next(err);
-        });
-});
-
-// Register a new user
-router.post('/register', function(req, res, next){
-    const saltHash = utils.genPassword(req.body.password);
-    
-    const salt = saltHash.salt;
-    const hash = saltHash.hash;
-
-    const newUser = new User({
-        username: req.body.username,
-        hash: hash,
-        salt: salt
-    });
-
-    try {
-    
-        newUser.save()
-            .then((user) => {
-                res.sendFile('success.html', {root: __dirname});
-            });
-
-    } catch (err) {
-        
-        res.json({ success: false, msg: err });
-    
-    }
-
+    res.redirect('/');
 });
 
 // Use `curl "http://localhost:3000/add?n1=10&n2=20"` to test
-app.get('/add', (req, res) => {
+router.get('/add', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     try {
         var n1 = parseInt(req.query.n1);
         var n2 = parseInt(req.query.n2);
