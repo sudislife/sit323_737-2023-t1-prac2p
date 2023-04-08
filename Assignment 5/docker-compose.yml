@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  calculator:
+    build:
+      context: ./calculator
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    environment:
+      - PORT=8000
+    restart: "always"
+  jokes:
+    build:
+      context: ./jokes
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+    restart: "always"
+
+networks:
+  my-network:
+    driver: bridge
