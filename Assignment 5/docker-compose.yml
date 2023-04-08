@@ -1,9 +1,9 @@
 version: "3.9"
 
 services:
-  web:
+  calculator:
     build:
-      context: .
+      context: ./calculator
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
@@ -16,3 +16,9 @@ services:
     environment:
       - PORT=8000
     restart: "always"
+    other_microservice:
+      condition: service_healthy
+
+networks:
+  my-network:
+    driver: bridge
