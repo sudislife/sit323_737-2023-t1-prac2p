@@ -16,8 +16,15 @@ services:
     environment:
       - PORT=8000
     restart: "always"
-    other_microservice:
-      condition: service_healthy
+  jokes:
+    build:
+      context: ./jokes
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+    restart: "always"
 
 networks:
   my-network:
