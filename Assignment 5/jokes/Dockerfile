@@ -15,4 +15,6 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+EXPOSE 8001
+
 CMD [ "node", "jokes.js" ]

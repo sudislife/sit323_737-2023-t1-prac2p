@@ -19,5 +19,5 @@ app.get('/joke', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log("Joke service listening at http://localhost:" + PORT + "/");
+  console.log("Joke service listening at port " + PORT);
 });

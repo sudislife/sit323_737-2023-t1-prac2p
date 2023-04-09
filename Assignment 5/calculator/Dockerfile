@@ -10,8 +10,9 @@ COPY package*.json ./
 RUN npm install
 RUN apk update && apk add curl
 
-
 # Bundle app source
 COPY . .
+
+EXPOSE 8000
 
 CMD [ "node", "calculator.js" ]
