@@ -28,6 +28,12 @@ app.get('/', (req, res) => {
     res.sendFile('index.html', { root: __dirname });
 });
 
+// Healtcheck
+app.get('/health', (req, res) => {
+    // Send 200 OK
+    res.sendStatus(200);
+});
+
 // Use `curl "http://localhost:3000/add?n1=10&n2=20"` to test
 app.get('/add', (req, res) => {
     try {
@@ -170,5 +176,5 @@ app.get('/pow', (req, res) => {
 })
 
 app.listen(PORT, () => {
-    console.log('Server is running on port http://localhost:' + PORT + '/');
+    console.log('Server is running on port ' + PORT);
 });

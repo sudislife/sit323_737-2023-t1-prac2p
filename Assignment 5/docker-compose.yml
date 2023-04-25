@@ -2,11 +2,12 @@ version: "3.9"
 
 services:
   calculator:
+    container_name: calculator
     build:
       context: ./calculator
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "80:8000"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 1m30s
@@ -15,17 +16,28 @@ services:
       start_period: 30s
     environment:
       - PORT=8000
+    networks:
+      my-network:
+        ipv4_address: 172.28.0.2
     restart: "always"
   jokes:
+    container_name: jokes
     build:
       context: ./jokes
       dockerfile: Dockerfile
     ports:
-      - "8001:8001"
+      - "81:8001"
     environment:
       - PORT=8001
+    networks:
+      my-network:
+        ipv4_address: 172.28.0.3
     restart: "always"
 
 networks:
   my-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+          gateway: 172.28.0.1
