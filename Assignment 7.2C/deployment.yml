@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: calculator
-        image: cheeky77/cnad:calculator
+        image: cheeky77/cnad/calculator:v3
         ports:
         - containerPort: 3000

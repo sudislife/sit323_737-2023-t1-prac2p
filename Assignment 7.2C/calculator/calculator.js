@@ -30,7 +30,9 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.get('/', (req, res) => {
-    res.sendFile('index.html', { root: __dirname });
+    // Added a status return to home page
+    // Random Comment
+    res.status(200).sendFile('index.html', { root: __dirname });
 });
 
 // Healtcheck
