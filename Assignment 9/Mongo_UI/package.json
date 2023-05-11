@@ -1,0 +1,15 @@
+{
+  "name": "mongo_ui",
+  "version": "1.0.0",
+  "description": "Sends queries to mongoDB and displays the results in a table",
+  "main": "mongo_ui.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sudaksh Mishra",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.3.0-alpha3",
+    "express": "^4.18.2"
+  }
+}

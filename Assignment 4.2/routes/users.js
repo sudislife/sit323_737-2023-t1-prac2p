@@ -4,6 +4,7 @@ const User = mongoose.model('User');
 const passport = require('passport');
 const utils = require('../lib/utils');
 
+
 router.get('/protected', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!"});
 });
@@ -45,7 +46,7 @@ router.get('/success', function(req, res, next) {
 });
 
 // Register a new user
-router.post('/register', function(req, res, next){
+router.post('/register', function(req, res, next) {
     const saltHash = utils.genPassword(req.body.password);
     
     const salt = saltHash.salt;
