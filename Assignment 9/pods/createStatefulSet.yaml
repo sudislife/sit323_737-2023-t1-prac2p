@@ -6,8 +6,8 @@ spec:
   selector:
     matchLabels:
       app: mongo
-  serviceName: "mongo"
-  replicas: 3
+  serviceName: "mongo-svc"
+  replicas: 1
   template:
     metadata:
       labels:
