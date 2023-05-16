@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Assignment 9.1P Home</title>
+    <title>Read</title>
     <meta name="description" content="Assignment 9.1P">
     <meta name="author" content="SudakshMishra">
     
@@ -13,23 +13,27 @@
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 mb-md-0">
-                <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
+                <li><a href="/" class="nav-link px-2 text-secondary">Home</a></li>
                 <li><a href="/insert" class="nav-link px-2 text-secondary">Insert</a></li>
                 <li><a href="/update" class="nav-link px-2 text-secondary">Update</a></li>
                 <li><a href="/delete" class="nav-link px-2 text-secondary">Delete</a></li>
-                <li><a href="/read" class="nav-link px-2 text-secondary">Read</a></li>
+                <li><a href="/read" class="nav-link px-2 text-white">Read</a></li>
             </ul>
         </div>
     </div>
 </header>
 
-
-<body class="text-center h-200 text-bg-dark">
+<body class="text-center h-200 bg-dark">
+    <main class="form-signin w-100 m-auto">
+        <form method="POST" action="/read">
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Read</button>
+        </form>
+    </main>
     
-    <br>
-
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <h1>Welcome to Student 222348309's server!</h1>
-        <p class="lead">Assignment 9.1P</p>
-    </div>
 </body>
+
+<style>
+    .form-signin {
+        max-width: 400px;
+    }
+</style>

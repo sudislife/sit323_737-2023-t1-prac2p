@@ -16,6 +16,11 @@ spec:
       containers:
         - name: mongo
           image: mongo:4.0.8
+          command:
+            - /usr/bin/mongod
+            - "--bind_ip_all"
+            - "--repair"
+            - "--config=/etc/mongo/mongodb.conf"
           startupProbe:
             exec:
               command:
@@ -60,10 +65,6 @@ spec:
                 secretKeyRef:
                   key: password
                   name: mongodb-secret
-          command:
-            - mongod
-            - "--bind_ip_all"
-            - --config=/etc/mongo/mongodb.conf
           volumeMounts:
             - name: mongo-volume
               mountPath: /data/db

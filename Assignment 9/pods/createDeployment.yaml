@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: mongo
-  
+  serviceName: mongo-svc
   template:
     metadata:
       labels:

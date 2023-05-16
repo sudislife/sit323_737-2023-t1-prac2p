@@ -15,4 +15,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD [ "node", "Mongo_UI.js" ]
+CMD [ "node", "mongo_ui.js" ]

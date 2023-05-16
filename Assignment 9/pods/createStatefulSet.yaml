@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: mongo
-  serviceName: "mongo-svc"
+  serviceName: mongo-svc
   replicas: 1
   template:
     metadata:
@@ -16,10 +16,15 @@ spec:
       containers:
         - name: mongo
           image: mongo:4.0.8
+          command:
+            - /usr/bin/mongod
+            - "--bind_ip_all"
+            # - "--repair"
+            - "--config=/etc/mongo/mongodb.conf"
           startupProbe:
             exec:
               command:
-                - mongo
+                - /usr/bin/mongo
                 - --eval
                 - "db.adminCommand('ping')"
             initialDelaySeconds: 1
@@ -30,7 +35,7 @@ spec:
           livenessProbe:
             exec:
               command:
-                - mongo
+                - /usr/bin/mongo
                 - --eval
                 - "db.adminCommand('ping')"
             initialDelaySeconds: 1
@@ -41,7 +46,7 @@ spec:
           readinessProbe:
             exec:
               command:
-                - mongo
+                - /usr/bin/mongo
                 - --eval
                 - "db.adminCommand('ping')"
             initialDelaySeconds: 1
@@ -51,19 +56,17 @@ spec:
             failureThreshold: 2
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  key: username
-                  name: mongodb-config
+              value: admin1
+              # valueFrom:
+              #   configMapKeyRef:
+              #     key: username
+              #     name: mongodb-config
             - name: MONGO_INITDB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: mongodb-secret
-          command:
-            - mongod
-            - "--bind_ip_all"
-            - --config=/etc/mongo/mongodb.conf
+              value: password
+              # valueFrom:
+              #   secretKeyRef:
+              #     key: password
+              #     name: mongodb-secret
           volumeMounts:
             - name: mongo-volume
               mountPath: /data/db
