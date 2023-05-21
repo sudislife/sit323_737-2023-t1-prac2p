@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jokes
+  labels:
+    app: jokes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jokes
+  template:
+    metadata:
+      labels:
+        app: jokes
+    spec:
+      containers:
+        - name: jokes
+          image: cheeky77/jokes:v1
+          env:
+            - name: PORT
+              value: "8000"
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+          
