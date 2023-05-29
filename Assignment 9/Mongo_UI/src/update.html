@@ -1,0 +1,56 @@
+<!doctype html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Update</title>
+    <meta name="description" content="Assignment 9.1P">
+    <meta name="author" content="SudakshMishra">
+    
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<header class="p-3 text-bg-dark">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 mb-md-0">
+                <li><a href="/" class="nav-link px-2 text-secondary">Home</a></li>
+                <li><a href="/insert" class="nav-link px-2 text-secondary">Insert</a></li>
+                <li><a href="/update" class="nav-link px-2 text-white">Update</a></li>
+                <li><a href="/delete" class="nav-link px-2 text-secondary">Delete</a></li>
+                <li><a href="/read" class="nav-link px-2 text-secondary">Read</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<body class="text-center h-200 bg-dark">
+    <main class="form-signin w-100 m-auto">
+        <form method="POST" action="/update">
+            <br>
+            <h1 class="h3 mb-3 fw-normal text-bg-dark">Update</h1>
+            <div class="form-floating">
+                <input name="name" type="text" class="form-control" id="floatingInput" placeholder="Name">
+                <label for="floatingInput">Name</label>
+            </div>
+            <br>
+            <div class="form-floating">
+                <input name="name2" type="text" class="form-control" id="floatingInput" placeholder="New Name">
+                <label for="floatingInput">New Name</label>
+            </div>
+            <br>
+            <div class="form-floating">
+                <input name="age" type="text" class="form-control" id="floatingInput" placeholder="Age">
+                <label for="floatingInput">Age</label>
+            </div>
+            <br>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Update</button>
+        </form>
+    </main>
+    
+</body>
+
+<style>
+    .form-signin {
+        max-width: 400px;
+    }
+</style>
